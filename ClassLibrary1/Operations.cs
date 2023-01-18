@@ -9,12 +9,12 @@ namespace ClassLibrary1
     {
         public static void GetDocs(Type classtype)
         {
-            ShowClassAttr(classtype);
-            ShowPropAttr(classtype);
-            ShowMethodAttr(classtype);
+            ShowClassAttributes(classtype);
+            ShowPropAttributes(classtype);
+            ShowMethodAttributes(classtype);
         }
 
-        public static void ShowClassAttr(Type classtype)
+        public static void ShowClassAttributes(Type classtype)
         {
             Console.WriteLine("Assembly: {0}", Assembly.GetExecutingAssembly());
             Console.WriteLine("\nClass: \n\n{0}", classtype.Name);
@@ -31,7 +31,7 @@ namespace ClassLibrary1
             }
         }
 
-        public static void ShowPropAttr(Type classtype)
+        public static void ShowPropAttributes(Type classtype)
         {
             Console.WriteLine("\n\nProperties: ");
             Console.WriteLine();
@@ -53,7 +53,7 @@ namespace ClassLibrary1
             }
         }
 
-        public static void ShowMethodAttr(Type classtype)
+        public static void ShowMethodAttributes(Type classtype)
         {
             Console.WriteLine("\nMethods:\n");
             MethodInfo[] methods = classtype.GetMethods();
