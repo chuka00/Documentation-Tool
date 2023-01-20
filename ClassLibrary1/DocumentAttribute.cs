@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace ClassLibrary1
 {
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.All)]
     public class DocumentAttribute : Attribute
     {
         public DocumentAttribute(string description)
