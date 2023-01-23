@@ -5,73 +5,155 @@ using System.Text;
 
 namespace ClassLibrary1
 {
+
     public class Operations
     {
-        public static void GetDocs(Type classtype)
+        public static void GetDocs()
         {
-            ShowClassAttributes(classtype);
-            ShowPropAttributes(classtype);
-            ShowMethodAttributes(classtype);
-        }
+            var assembly = Assembly.GetExecutingAssembly();
 
-        public static void ShowClassAttributes(Type classtype)
-        {
-            Console.WriteLine("Assembly: {0}", Assembly.GetExecutingAssembly());
-            Console.WriteLine("\nClass: \n\n{0}", classtype.Name);
+            Utility.PrintColorMessage(ConsoleColor.DarkCyan, "Assembly name: " + assembly.FullName);
 
-            object[] classAttr = classtype.GetCustomAttributes(true);
-
-            foreach (Attribute item in classAttr)
-            {
-                if (item is DocumentAttribute)
-                {
-                    DocumentAttribute doc = (DocumentAttribute)item;
-                    Console.WriteLine("\nDescription:\n\t{0}", doc.Description);
-                }
-            }
-        }
-
-        public static void ShowPropAttributes(Type classtype)
-        {
-            Console.WriteLine("\n\nProperties: ");
             Console.WriteLine();
 
-            PropertyInfo[] properties = classtype.GetProperties();
+            Type[] types = assembly.GetTypes();
 
-            for (int i = 0; i < properties.GetLength(0); i++)
+
+
+            foreach (Type type in types)
             {
-                object[] propAttr = properties[i].GetCustomAttributes(true);
+                DisplayType(type);
 
-                foreach (Attribute item in propAttr)
+                DisplayConstructor(type);
+
+                DisplayProperties(type);
+
+                DisplayMethods(type);
+
+                Console.WriteLine();
+
+            }
+
+
+
+        }
+
+
+
+        private static void DisplayMethods(Type type)
+        {
+            var methods = type.GetMethods();
+
+            foreach (var method in methods)
+            {
+                var documentattribute = (DocumentAttribute)method.GetCustomAttribute(typeof(DocumentAttribute));
+
+                if (documentattribute != null)
                 {
-                    if (item is DocumentAttribute)
+                    Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Method: " + method.Name);
+
+                    Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Description: " + documentattribute.Description);
+
+                    if (!string.IsNullOrEmpty(documentattribute.Input))
                     {
-                        DocumentAttribute doc = (DocumentAttribute)item;
-                        Console.WriteLine("{0}\nDescription:\n\t{1}\nInput:\n\t{2}\n", properties[i].Name, doc.Description, doc.Input);
+                        Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Input: " + documentattribute.Input);
+                    }
+
+                    if (!string.IsNullOrEmpty(documentattribute.Output))
+                    {
+                        Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Output: " + documentattribute.Output + "\n");
                     }
                 }
             }
         }
 
-        public static void ShowMethodAttributes(Type classtype)
+
+
+
+
+        // Display properties
+
+        private static void DisplayProperties(Type type)
         {
-            Console.WriteLine("\nMethods:\n");
-            MethodInfo[] methods = classtype.GetMethods();
 
+            var properties = type.GetProperties();
 
-            for (int i = 0; i < methods.GetLength(0); i++)
+            foreach (var property in properties)
             {
-                object[] methAttr = methods[i].GetCustomAttributes(true);
+                //Gets custom attribute  to property variable. The returned attribute is then being assigned to the documentattribute variable.
+                var documentattribute = (DocumentAttribute)property.GetCustomAttribute(typeof(DocumentAttribute));
 
-                foreach (Attribute item in methAttr)
+                if (documentattribute != null)
                 {
-                    if (item is DocumentAttribute)
+                    Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Property: " + property.Name);
+
+                    Utility.PrintColorMessage(ConsoleColor.Cyan, "\t Description: " + documentattribute.Description + "\n");
+                }
+
+
+            }
+        }
+
+
+        //// Display constructors
+        private static void DisplayConstructor(Type type)
+        {
+
+            var constructors = type.GetConstructors();
+
+            foreach (var constructor in constructors)
+            {
+                var documentattribute = (DocumentAttribute)constructor.GetCustomAttribute(typeof(DocumentAttribute));
+
+                if (documentattribute != null)
+                {
+                    Utility.PrintColorMessage(ConsoleColor.Cyan, "\t Constructor: " + constructor.Name);
+
+                    Utility.PrintColorMessage(ConsoleColor.Cyan, "\t Description: " + documentattribute.Description);
+
+                    if (!string.IsNullOrEmpty(documentattribute.Input))
                     {
-                        DocumentAttribute doc = (DocumentAttribute)item;
-                        Console.WriteLine("{0}\nDescription:\n\t{1}\nInput:\n\t{2}", methods[i].Name, doc.Description, doc.Input);
+                        Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Input: " + documentattribute.Input);
+                    }
+
+                    if (!string.IsNullOrEmpty(documentattribute.Output))
+                    {
+                        Utility.PrintColorMessage(ConsoleColor.Yellow, "\t Output: " + documentattribute.Output + "\n");
                     }
                 }
+
+            }
+        }
+
+        private static void DisplayType(Type type)
+        {
+            var documentAttribute = (DocumentAttribute)type.GetCustomAttribute(typeof(DocumentAttribute));
+
+            if (documentAttribute != null && type.IsClass)
+            {
+                Utility.PrintColorMessage(ConsoleColor.Yellow, "Class: " + type.Name);
+
+                Utility.PrintColorMessage(ConsoleColor.Yellow, "Description: " + documentAttribute.Description);
+
+                Console.WriteLine();
+
+            }
+            else if (documentAttribute != null && type.IsEnum)
+            {
+                Utility.PrintColorMessage(ConsoleColor.Cyan, "Enum: " + type.Name);
+
+                Utility.PrintColorMessage(ConsoleColor.Cyan, "Description: " + documentAttribute.Description + "\n");
+
+                Console.WriteLine();
+            }
+            else if (documentAttribute != null && type.IsInterface)
+            {
+                Utility.PrintColorMessage(ConsoleColor.Cyan, "Interface: " + type.Name);
+
+                Utility.PrintColorMessage(ConsoleColor.Cyan, "Description: " + documentAttribute.Description + "\n");
             }
         }
     }
 }
+
+       

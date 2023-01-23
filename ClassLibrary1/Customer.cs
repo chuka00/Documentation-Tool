@@ -7,7 +7,7 @@ namespace ClassLibrary1
     [Document("This class represents a customer in the system")]
     public class Customer
     {
-        [Document("This gets or sets the customer's ID")]
+        [Document("This gets or sets the customer's id")]
         public int ID { get; set; }
         [Document("This gets or sets the customer's Name")]
         public string Name { get; set; }
@@ -17,20 +17,23 @@ namespace ClassLibrary1
         public int Age { get; set; }
         public GenderEnum Gender { get; set; }
 
-        [Document("Retrieves customer details from the database")]
+        [Document("Retrieves customer details from the database", Input ="id", Output ="Customer Details")]
         public void GetCustomerDetails(int id)
         {
             
         }
-
-        public Customer(int age, GenderEnum gender)
+        [Document("This constructor initializes a new customer", Input = "int id, string Name, string Address, int Age,  GenderEnum Gender", Output = "none")]
+        public Customer(int id, string Name, string Address, int age, GenderEnum gender)
         {
+            ID = id;
+            this.Name = Name;
+            this.Address = Address;
             Age = age;
             Gender = gender;
 
         }
 
-        [Document("Provides valid gender options of a customer")]
+        [Document("Provides the gender options of a customer")]
         public enum GenderEnum
         {
             Male,

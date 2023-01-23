@@ -8,7 +8,7 @@ namespace Fetcher
     {
         static void Main(string[] args)
         {
-            Operations.GetDocs(typeof(Customer));
+            Operations.GetDocs();
         }
     }
 }
